@@ -6,6 +6,8 @@
 
 [观看 91 秒项目介绍（中文旁白、字幕）](media/项目介绍.mp4) · [下载字幕](media/项目介绍.srt)
 
+[按人物浏览原始文件](originals/) · [网页逐段阅读副本](data/paragraphs/)
+
 ## 开始阅读
 
 **直接阅读。** [下载离线阅读包](https://github.com/YerayL/investor-reading-room/releases/latest/download/investor-reading-room-offline.zip)，将整个压缩包解压后双击 `index.html`。笔记、手册和介绍视频均可离线打开。

@@ -7,6 +7,3 @@ __pycache__/
 Thumbs.db
 .vscode/
 .idea/
-originals/
-data/paragraphs/
-data/offline.js
