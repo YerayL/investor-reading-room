@@ -2,7 +2,9 @@
 
 读到一句投资判断，怎样找到它的出处，看看发言人当时面对的是什么问题？投资文稿馆把 **926 份公开文稿、中文详读和原文位置** 放进同一个离线阅读器。可以从一位投资人开始，也可以带着“什么时候卖出”这样的问题来查。
 
-[在线阅读](https://investor-reading-room.netlify.app) · [下载完整离线阅读包](https://github.com/YerayL/investor-reading-room/releases/latest/download/investor-reading-room-offline.zip) · [浏览原稿](originals/) · [下载文稿目录](data/资料目录.csv)
+**在线阅读　[https://investor-reading-room.netlify.app](https://investor-reading-room.netlify.app)**
+
+[下载完整离线阅读包](https://github.com/YerayL/investor-reading-room/releases/latest/download/investor-reading-room-offline.zip) · [浏览原稿](originals/) · [下载文稿目录](data/资料目录.csv)
 
 [![观看投资文稿馆项目介绍](media/项目介绍封面.webp)](https://github.com/YerayL/investor-reading-room/releases/latest/download/investor-reading-room-intro.mp4)
 
