@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#faf9f5" />
+    <meta
+      name="description"
+      content="按投资者、主题和文稿类型查阅投资演讲、访谈、备忘录及逐篇中文笔记。"
+    />
+    <title>投资文稿馆</title>
+    <link rel="icon" href="assets/mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到正文</a>
+    <header class="site-head">
+      <div class="mast">
+        <a class="brand" href="#/" aria-label="投资文稿馆首页"
+          ><img src="assets/mark.svg" width="38" height="38" alt="" /><span
+            >投资文稿馆</span
+          ></a
+        >
+        <nav class="site-nav" aria-label="主导航">
+          <a href="#/" data-nav="home">阅览室</a
+          ><a href="#/library" data-nav="library">全部文稿</a
+          ><a href="#/investors" data-nav="investors">投资家</a
+          ><a href="#/guide" data-nav="guide">实践手册</a>
+        </nav>
+        <button class="nav-search" data-action="search" aria-label="搜索文库">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="10.7" cy="10.7" r="6.5" />
+            <path d="m16 16 5 5" /></svg
+          ><span>搜索</span><kbd>/</kbd>
+        </button>
+      </div>
+    </header>
+    <main id="main" tabindex="-1">
+      <div class="startup"><span class="loader"></span>正在打开文库…</div>
+    </main>
+    <footer class="site-foot">
+      <div>
+        <a class="footname" href="#/">投资文稿馆</a
+        ><span>投资者公开文稿与中文阅读笔记</span>
+      </div>
+      <nav class="foot-links" aria-label="相关资料"><a href="media/项目介绍.mp4">项目介绍</a><button data-action="local" id="source-setting">关联本地原文</button></nav>
+    </footer>
+    <dialog id="local-dialog">
+      <div class="dialog-cap">
+        <h2>关联本地原文</h2>
+        <button data-action="close-dialog" aria-label="关闭">×</button>
+      </div>
+      <p>
+        选择存放投资家子目录的资料文件夹，即可从笔记打开本地原文。文件只在当前浏览器中读取。
+      </p>
+      <p id="local-status" role="status"></p>
+      <div class="dialog-actions">
+        <button class="btn solid" data-action="choose-local">
+          选择资料文件夹</button
+        ><button class="btn" data-action="close-dialog">关闭</button>
+      </div>
+    </dialog>
+    <input type="file" webkitdirectory multiple id="local-files" hidden />
+    <div id="toast" role="status" aria-live="polite"></div>
+    <noscript>请启用 JavaScript，以搜索文稿及查看逐篇阅读笔记。</noscript>
+    <script src="assets/app.js" defer></script>
+  </body>
+</html>

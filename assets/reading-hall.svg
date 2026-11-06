@@ -1,0 +1,303 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="640"
+  height="340"
+  viewBox="0 0 640 340"
+  fill="none"
+>
+  <defs>
+    <pattern id="h" width="4" height="4" patternUnits="userSpaceOnUse">
+      <path
+        d="M0 4 4 0"
+        stroke="#d2cb9f"
+        stroke-opacity=".35"
+        stroke-width=".7"
+      />
+    </pattern>
+    <pattern id="brick" width="24" height="11" patternUnits="userSpaceOnUse">
+      <path
+        d="M0 0H24M12 0v5.5M0 5.5h24M1 5.5V11"
+        stroke="#a9b399"
+        stroke-opacity=".35"
+        stroke-width=".65"
+      />
+    </pattern>
+    <g id="pillar" stroke="#d6d2b1" stroke-linejoin="round">
+      <path
+        d="M-14 0h28v3h-28zM-12 4h24v4h-24zM-10 9q10 6 20 0l-1 5h-18zM-8 14H8l2 89h-20z"
+        fill="#315648"
+      />
+      <path
+        d="M-7 17v82m3-82-1 82m4-82v82m4-82 1 82m2-82 1 82"
+        stroke-width=".8"
+      />
+      <path
+        d="M-11 104h22v3h-22zM-13 108h26v3h-26zM-15 112h30v3h-30z"
+        fill="#315648"
+      />
+    </g>
+    <g id="window" stroke="#bbc5a8" stroke-width=".85">
+      <path d="M-6 0v-20a6 6 0 0 1 12 0V0zm-2 1H8m-8-26V0m-5-16H5m-10 6H5" />
+      <path d="M-8-18a8 8 0 0 1 16 0" />
+    </g>
+  </defs>
+  <g opacity=".36" stroke="#80967a" stroke-width=".65">
+    <circle cx="400" cy="155" r="70" />
+    <circle cx="400" cy="155" r="97" />
+    <circle cx="400" cy="155" r="124" />
+    <circle cx="400" cy="155" r="151" />
+    <circle cx="400" cy="155" r="178" />
+    <path d="M0 268H638M0 278H638M454 0v317M332 0v317" stroke-dasharray="3 7" />
+  </g>
+  <g
+    stroke="#c4c6a6"
+    stroke-width="1.1"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+  >
+    <path d="M103 194 76 154v115h28m365-75 55-43 97 21v99H103" fill="#345949" />
+    <path d="M481 185l44-33 96 22v90H480z" fill="url(#brick)" />
+    <path
+      d="m464 175 60-35 105 23v6l-105-23-60 36m0-10 60-36 105 22m-99-9 89 20v4l-89-20zm0 86 89 10m-89-4 89 9m-87-7 85 9"
+    />
+    <use href="#window" transform="translate(531 203) scale(.77 1)" />
+    <path d="m527 223v-10l8 1.5v9z" stroke-width=".7" />
+    <use href="#window" transform="translate(544.2 205.55) scale(.77 1)" />
+    <path d="m540.2 225.55v-10l8 1.5v9z" stroke-width=".7" />
+    <use href="#window" transform="translate(557.4 208.1) scale(.77 1)" />
+    <path d="m553.4 228.1v-10l8 1.5v9z" stroke-width=".7" />
+    <use href="#window" transform="translate(570.6 210.65) scale(.77 1)" />
+    <path d="m566.6 230.65v-10l8 1.5v9z" stroke-width=".7" />
+    <use href="#window" transform="translate(583.8 213.2) scale(.77 1)" />
+    <path d="m579.8 233.2v-10l8 1.5v9z" stroke-width=".7" />
+    <use href="#window" transform="translate(597 215.75) scale(.77 1)" />
+    <path d="m593 235.75v-10l8 1.5v9z" stroke-width=".7" />
+    <use href="#window" transform="translate(610.2 218.3) scale(.77 1)" />
+    <path d="m606.2 238.3v-10l8 1.5v9z" stroke-width=".7" />
+    <path d="M109 260V150h365v110z" fill="#224a3d" />
+    <path d="M109 260V150h365v110z" fill="url(#brick)" />
+    <path d="M136 253v-48q9-12 19 0v48z" stroke-opacity=".48" />
+    <path d="M140 253v-45q5-8 10 0v45" stroke-opacity=".38" />
+    <path d="M175 253v-48q9-12 19 0v48z" stroke-opacity=".48" />
+    <path d="M179 253v-45q5-8 10 0v45" stroke-opacity=".38" />
+    <path d="M214 253v-48q9-12 19 0v48z" stroke-opacity=".48" />
+    <path d="M218 253v-45q5-8 10 0v45" stroke-opacity=".38" />
+    <path d="M253 253v-48q9-12 19 0v48z" stroke-opacity=".48" />
+    <path d="M257 253v-45q5-8 10 0v45" stroke-opacity=".38" />
+    <path d="M292 253v-48q9-12 19 0v48z" stroke-opacity=".48" />
+    <path d="M296 253v-45q5-8 10 0v45" stroke-opacity=".38" />
+    <path d="M331 253v-48q9-12 19 0v48z" stroke-opacity=".48" />
+    <path d="M335 253v-45q5-8 10 0v45" stroke-opacity=".38" />
+    <path d="M370 253v-48q9-12 19 0v48z" stroke-opacity=".48" />
+    <path d="M374 253v-45q5-8 10 0v45" stroke-opacity=".38" />
+    <path d="M409 253v-48q9-12 19 0v48z" stroke-opacity=".48" />
+    <path d="M413 253v-45q5-8 10 0v45" stroke-opacity=".38" />
+    <path d="M448 253v-48q9-12 19 0v48z" stroke-opacity=".48" />
+    <path d="M452 253v-45q5-8 10 0v45" stroke-opacity=".38" />
+    <path d="M143 151V117h306v34z" fill="#42634e" />
+    <path d="M145 147v-29h301v29z" fill="url(#brick)" />
+    <path
+      d="M135 118h320v-6H135zm3-10h314l-1 4H138zm19-2V96h276v10"
+      fill="#315747"
+    />
+    <path d="M158 97q7-20 25-23v-4h219v4q17 4 29 23z" fill="#375b48" />
+    <path d="M188 69q18-32 91-44h21q72 10 96 44z" fill="#3e614a" />
+    <path d="M189 68Q223.5 40 285 26" opacity=".72" stroke-width=".8" />
+    <path
+      d="M198.71428571428572 68Q229.85714285714286 40 285.9 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M208.42857142857142 68Q236.21428571428572 40 286.8 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M218.14285714285714 68Q242.57142857142856 40 287.7 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M227.85714285714286 68Q248.92857142857144 40 288.6 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M237.57142857142856 68Q255.28571428571428 40 289.5 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M247.28571428571428 68Q261.6428571428571 40 290.4 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path d="M257 68Q268 40 291.3 26" opacity=".72" stroke-width=".8" />
+    <path
+      d="M266.7142857142857 68Q274.3571428571429 40 292.2 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M276.42857142857144 68Q280.7142857142857 40 293.1 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M286.1428571428571 68Q287.07142857142856 40 294 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M295.85714285714283 68Q293.42857142857144 40 294.9 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M305.57142857142856 68Q299.7857142857143 40 295.8 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M315.2857142857143 68Q306.1428571428571 40 296.7 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path d="M325 68Q312.5 40 297.6 26" opacity=".72" stroke-width=".8" />
+    <path
+      d="M334.71428571428567 68Q318.85714285714283 40 298.5 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M344.42857142857144 68Q325.2142857142857 40 299.4 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M354.1428571428571 68Q331.57142857142856 40 300.3 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M363.85714285714283 68Q337.92857142857144 40 301.2 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M373.57142857142856 68Q344.2857142857143 40 302.1 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path
+      d="M383.2857142857143 68Q350.6428571428571 40 303 26"
+      opacity=".72"
+      stroke-width=".8"
+    />
+    <path d="M393 68Q357 40 303.9 26" opacity=".72" stroke-width=".8" />
+    <path
+      d="M186 70h213v3H186zm8-7h198m-186-12h173m-156-9h137m-114-8h93M280 24v-3h20v3zm5-4V11h11v9m-12-9 6-5 7 5zm6-5V2"
+      fill="#42634e"
+    />
+    <path d="M167 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M183 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M199 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M215 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M231 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M247 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M263 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M279 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M295 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M311 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M327 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M343 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M359 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M375 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M391 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M407 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="M423 97v-8q4-6 8 0v8z" fill="#244a3d" stroke-width=".8" />
+    <path d="m83 150 209-60 210 60-2 5-208-57-206 57z" fill="#396049" />
+    <path d="m89 154 203-55 203 55zm11-3 192-46 192 46z" fill="url(#h)" />
+    <path d="m111 149 181-41 178 41zm7-1 174-35 167 35" stroke-width=".8" />
+    <path
+      d="M88 155h410v6H88zm5 6h401v4H93zm4 4h393v6H97zm4 6h385v3H101z"
+      fill="#446651"
+    />
+    <path d="M103 166v4" stroke-width="2" />
+    <path d="M110 166v4" stroke-width="2" />
+    <path d="M117 166v4" stroke-width="2" />
+    <path d="M124 166v4" stroke-width="2" />
+    <path d="M131 166v4" stroke-width="2" />
+    <path d="M138 166v4" stroke-width="2" />
+    <path d="M145 166v4" stroke-width="2" />
+    <path d="M152 166v4" stroke-width="2" />
+    <path d="M159 166v4" stroke-width="2" />
+    <path d="M166 166v4" stroke-width="2" />
+    <path d="M173 166v4" stroke-width="2" />
+    <path d="M180 166v4" stroke-width="2" />
+    <path d="M187 166v4" stroke-width="2" />
+    <path d="M194 166v4" stroke-width="2" />
+    <path d="M201 166v4" stroke-width="2" />
+    <path d="M208 166v4" stroke-width="2" />
+    <path d="M215 166v4" stroke-width="2" />
+    <path d="M222 166v4" stroke-width="2" />
+    <path d="M229 166v4" stroke-width="2" />
+    <path d="M236 166v4" stroke-width="2" />
+    <path d="M243 166v4" stroke-width="2" />
+    <path d="M250 166v4" stroke-width="2" />
+    <path d="M257 166v4" stroke-width="2" />
+    <path d="M264 166v4" stroke-width="2" />
+    <path d="M271 166v4" stroke-width="2" />
+    <path d="M278 166v4" stroke-width="2" />
+    <path d="M285 166v4" stroke-width="2" />
+    <path d="M292 166v4" stroke-width="2" />
+    <path d="M299 166v4" stroke-width="2" />
+    <path d="M306 166v4" stroke-width="2" />
+    <path d="M313 166v4" stroke-width="2" />
+    <path d="M320 166v4" stroke-width="2" />
+    <path d="M327 166v4" stroke-width="2" />
+    <path d="M334 166v4" stroke-width="2" />
+    <path d="M341 166v4" stroke-width="2" />
+    <path d="M348 166v4" stroke-width="2" />
+    <path d="M355 166v4" stroke-width="2" />
+    <path d="M362 166v4" stroke-width="2" />
+    <path d="M369 166v4" stroke-width="2" />
+    <path d="M376 166v4" stroke-width="2" />
+    <path d="M383 166v4" stroke-width="2" />
+    <path d="M390 166v4" stroke-width="2" />
+    <path d="M397 166v4" stroke-width="2" />
+    <path d="M404 166v4" stroke-width="2" />
+    <path d="M411 166v4" stroke-width="2" />
+    <path d="M418 166v4" stroke-width="2" />
+    <path d="M425 166v4" stroke-width="2" />
+    <path d="M432 166v4" stroke-width="2" />
+    <path d="M439 166v4" stroke-width="2" />
+    <path d="M446 166v4" stroke-width="2" />
+    <path d="M453 166v4" stroke-width="2" />
+    <path d="M460 166v4" stroke-width="2" />
+    <path d="M467 166v4" stroke-width="2" />
+    <path d="M474 166v4" stroke-width="2" />
+    <path d="M481 166v4" stroke-width="2" />
+    <path d="M488 166v4" stroke-width="2" />
+    <use href="#pillar" transform="translate(119 174) scale(.94 .75)" />
+    <use href="#pillar" transform="translate(157 174) scale(.94 .75)" />
+    <use href="#pillar" transform="translate(195 174) scale(.94 .75)" />
+    <use href="#pillar" transform="translate(233 174) scale(.94 .75)" />
+    <use href="#pillar" transform="translate(271 174) scale(.94 .75)" />
+    <use href="#pillar" transform="translate(309 174) scale(.94 .75)" />
+    <use href="#pillar" transform="translate(347 174) scale(.94 .75)" />
+    <use href="#pillar" transform="translate(385 174) scale(.94 .75)" />
+    <use href="#pillar" transform="translate(423 174) scale(.94 .75)" />
+    <use href="#pillar" transform="translate(461 174) scale(.94 .75)" />
+    <path
+      d="M95 260h402v4H95zm-5 4h411v4H90zm-7 5h425v4H83zm-7 5h441v5H76zm-7 5h456v6H69zm-9 6h475v4H60zm-13 5h502v4H47zm-12 5h525v5H35z"
+      fill="#385c48"
+    />
+  </g>
+  <g stroke="#99ac8c" stroke-width=".75" opacity=".7">
+    <path
+      d="M7 304h616m-569 4h536m-568 4h412m68 0h76m-492 4h265m83 0h126m-441 4h180m70 0h94"
+    />
+  </g>
+</svg>
