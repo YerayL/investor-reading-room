@@ -771,7 +771,6 @@ h3 {
   font-size: 13px;
 }
 .reader-actions,
-.dialog-actions,
 .editions,
 .tag-line {
   display: flex;
@@ -883,7 +882,7 @@ h3 {
   color: #536c55;
   background: #f2f4ed;
 }
-.ref-link:where(button):hover {
+.ref-link:hover {
   border-color: #81947e;
 }
 .practice-box {
@@ -1120,39 +1119,6 @@ h3 {
   to {
     transform: rotate(360deg);
   }
-}
-dialog {
-  width: min(440px, calc(100vw - 32px));
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 22px;
-  color: var(--ink);
-  background: var(--sheet);
-}
-dialog::backdrop {
-  background: #1d2a2360;
-}
-.dialog-cap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.dialog-cap h2 {
-  font: 650 23px var(--serif);
-}
-.dialog-cap button {
-  font: 24px var(--ui);
-}
-dialog p {
-  margin: 12px 0;
-  line-height: 1.75;
-  color: #536154;
-}
-#local-status {
-  font-size: 13px;
-}
-.dialog-actions {
-  margin-top: 18px;
 }
 #toast {
   position: fixed;
@@ -1538,12 +1504,10 @@ dialog p {
   .reader-actions,
   .crumb,
   .tag-line,
-  .references button:before,
   .hero-art,
   .nav-search,
   #toast,
-  .dialog-actions,
-  .chapter-nav,
+    .chapter-nav,
   .parts-head .select-label,
   .btn,
   .reader .editions,

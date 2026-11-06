@@ -13,3 +13,4 @@
 *.webp binary
 *.pdf binary
 originals/** -text
+*.csv -text whitespace=cr-at-eol

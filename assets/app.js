@@ -1,8 +1,6 @@
 "use strict";
 (function () {
   const main = document.querySelector("#main");
-  const dialog = document.querySelector("#local-dialog");
-  const fileInput = document.querySelector("#local-files");
   const icons = {
     arrow: '<path d="M4 12h15m-6-6 6 6-6 6"/>',
     right: '<path d="m9 5 7 7-7 7"/>',
@@ -113,9 +111,6 @@
     corpus = new Map(),
     bookmarks = new Set(storage()),
     current = {},
-    files = new Map(),
-    dirHandle = null,
-    oldObjectUrl = "",
     toastTimer;
   function getloc() {
     const [path, query = ""] = (location.hash.slice(1) || "/").split("?");
@@ -531,64 +526,40 @@
     );
   }
   function refs(d, values, ranges = []) {
-    const list = arr(values)
-      .map((a) => {
-        let n = String(typeof a === "object" ? a.num || "" : a),
-          kind = /^[PB]/.test(n) ? n[0] : d.file === "PDF" ? "P" : "B";
-        n = n.replace(/^[PB]/, "");
-        if (!/^\d+$/.test(n)) return "";
-        return kind === "P"
-          ? '<button class="ref-link" data-page="' +
-              n +
-              '" data-doc="' +
-              d.id +
-              '">第 ' +
-              n +
-              " 页</button>"
-          : '<button class="ref-link" data-paragraph="' + n + '" data-doc="' +
-              d.id + '">第 ' + n + ' 段</button>';
-      })
-      .filter(Boolean);
-    const rs = arr(ranges).map((range) => {
-      const label = String(range).replace(/P(\d+)/g, "第 $1 页").replace(/B(\d+)/g, "第 $1 段");
-      const match = /^B(\d+)–B(\d+)$/.exec(range);
-      if (!match) return esc(label);
-      return '<button class="ref-link" data-paragraph="' + match[1] + '" data-doc="' +
-        d.id + '" title="从第 ' + match[1] + ' 段读起">' + esc(label) + '</button>';
+    const prefix = d.file === "PDF" ? "P" : "B";
+    const unit = prefix === "P" ? "页" : "段";
+    function refLink(start, end) {
+      const match = new RegExp("^" + prefix + "([1-9]\\d*)$").exec(start);
+      const href = window.ReadingRoomArchive.reference(d, start);
+      if (!match || !href) return "";
+      const number = match[1];
+      const label = "第 " + number + (end ? "–" + end : "") + " " + unit;
+      const attr = prefix === "P" ? "data-page" : "data-paragraph";
+      return '<a class="ref-link" href="' + esc(href) + '" target="_blank" rel="noopener" ' +
+        attr + '="' + number + '" data-doc="' + d.id + '">' + label + "</a>";
+    }
+    const rangeLinks = arr(ranges).map(value => {
+      const match = /^([BP])([1-9]\d*)–([BP])([1-9]\d*)$/.exec(value);
+      return match && match[1] === prefix && match[3] === prefix ? refLink(prefix + match[2], match[4]) : "";
     });
-    return list.length || rs.length
-      ? '<div class="references"><b>原文定位</b>' +
-          rs.concat(list).join("") +
-          "</div>"
-      : "";
+    const singleLinks = arr(values).map(value => {
+      let ref = String(typeof value === "object" ? value.num || "" : value);
+      if (/^\d+$/.test(ref)) ref = prefix + ref;
+      return refLink(ref);
+    });
+    const links = rangeLinks.concat(singleLinks).filter(Boolean);
+    return links.length ? '<div class="references"><b>原文定位</b>' + links.join("") + "</div>" : "";
   }
   function sourceButtons(d) {
+    const archive = window.ReadingRoomArchive.originalView(d);
     const direct = url(d.sourceUrl);
-    let directLink =
-      direct && direct !== url(d.web)
-        ? '<a class="btn small" href="' +
-          esc(direct) +
-          '" target="_blank" rel="noopener noreferrer">' +
-          icon("file") +
-          "打开原文</a>"
-        : "";
-    return (
-      directLink +
-      (url(d.web)
-        ? '<a class="btn small" href="' +
-          esc(url(d.web)) +
-          '" target="_blank" rel="noopener noreferrer">来源页面' +
-          icon("link") +
-          "</a>"
-        : "") +
-      (d.local
-        ? '<button class="btn small" data-original="' +
-          d.id +
-          '">' +
-          icon("folder") +
-          "本地原文</button>"
-        : "")
-    );
+    const web = url(d.web);
+    return (archive ? '<a class="btn small" data-original="' + d.id + '" href="' + esc(archive) +
+      '" target="_blank" rel="noopener">' + icon("folder") + '打开本地原文</a>' : "") +
+      (direct && direct !== web ? '<a class="btn small" href="' + esc(direct) +
+        '" target="_blank" rel="noopener noreferrer">在线原文' + icon("link") + '</a>' : "") +
+      (web ? '<a class="btn small" href="' + esc(web) +
+        '" target="_blank" rel="noopener noreferrer">来源页面' + icon("link") + '</a>' : "");
   }
   function bookmarkButton(d) {
     return (
@@ -1035,11 +1006,6 @@
                   empty("页面不存在", "请使用上方导航继续。") +
                   "</div>";
     main.innerHTML = markup;
-    if (window.READING_ROOM_LOCAL_ARCHIVE === true) {
-      let control = document.querySelector("#source-setting");
-      control.textContent = "本地原文已关联";
-      control.disabled = true;
-    }
     document.title =
       (main.querySelector("h1")?.textContent || "阅览室") + " · 投资文稿馆";
     if (scroll) {
@@ -1078,320 +1044,6 @@
       3200,
     );
   }
-  function localDialog(message, source) {
-    let link = dialog.querySelector(".original-site-link");
-    if (!link) {
-      link = document.createElement("a");
-      link.className = "btn original-site-link";
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.textContent = "打开来源网页";
-      dialog.querySelector(".dialog-actions").append(link);
-    }
-    link.style.display = source ? "" : "none";
-    if (source) link.href = source;
-    else link.removeAttribute("href");
-    document.querySelector("#local-status").textContent =
-      message ||
-      (dirHandle || files.size
-        ? "已关联本地资料文件夹。"
-        : "尚未关联资料文件夹。");
-    if (!dialog.open) dialog.showModal();
-  }
-  function decoded(path) {
-    return path.split("/").map((a) => {
-      try {
-        return decodeURIComponent(a);
-      } catch {
-        return a;
-      }
-    });
-  }
-  function safeParts(path) {
-    if (typeof path !== "string") return [];
-    const p = decoded(path.replace(/\\/g, "/"));
-    return p.length &&
-      p.every((x) => x && x !== "." && x !== ".." && !/[\\/:]/.test(x))
-      ? p
-      : [];
-  }
-  async function findFile(parts) {
-    if (!parts.length) return null;
-    const key = parts.join("/");
-    if (files.has(key)) return files.get(key);
-    if (!dirHandle) return null;
-    let h = dirHandle;
-    for (let p of parts.slice(0, -1)) h = await h.getDirectoryHandle(p);
-    return (await h.getFileHandle(parts.at(-1))).getFile();
-  }
-  // Keep this segmentation in sync with tools/index_html.py. Archive HTML is parsed
-  // in an inert template and only its text is transferred to the reading window.
-  function archiveParagraphs(html) {
-    const template = document.createElement("template");
-    template.innerHTML = html;
-    const documentRoot = template.content;
-    for (const el of documentRoot.querySelectorAll("style,script,nav,footer,header,noscript")) {
-      el.remove();
-    }
-    const spaces = /[\s\u001c-\u001f\u0085]+/gu;
-    const trimSpaces = (v) => v.replace(/^[\s\u001c-\u001f\u0085]+|[\s\u001c-\u001f\u0085]+$/gu, "");
-    const normal = (v) => v.replace(spaces, " ").trim();
-    const length = (v) => Array.from(v).length;
-    const strings = (el) => {
-      const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-      const values = [];
-      while (walk.nextNode()) {
-        const value = trimSpaces(walk.currentNode.nodeValue);
-        if (value) values.push(value);
-      }
-      return values;
-    };
-    let body = documentRoot;
-    for (const sel of ["article", ".body", ".content", "main", "body"]) {
-      const candidate = documentRoot.querySelector(sel);
-      if (candidate && length(strings(candidate).join("")) > 380) {
-        body = candidate;
-        break;
-      }
-    }
-    const blocks = "p,h1,h2,h3,h4,li,blockquote,tr,div,section,pre";
-    let items = [];
-    for (const el of body.querySelectorAll(blocks)) {
-      if (el.querySelector(blocks)) continue;
-      const text = normal(strings(el).join(" "));
-      if (text && text !== items.at(-1)) items.push(text);
-    }
-    const full = strings(body).join("\n");
-    if (items.reduce((sum, v) => sum + length(v), 0) < length(normal(full)) * 0.65) {
-      items = full.split(/\r\n|[\n\r\v\f\u001c-\u001e\u0085\u2028\u2029]/u).map(normal).filter(Boolean);
-    }
-    const rows = [];
-    for (const item of items) {
-      if (length(item) < 1800) {
-        rows.push(item);
-        continue;
-      }
-      let buffer = "";
-      for (const fragment of item.split(/(?<=[。！？.!?])[\s\u001c-\u001f\u0085]*/u)) {
-        if (length(buffer) > 850) {
-          rows.push(buffer.trim());
-          buffer = "";
-        }
-        buffer += fragment + " ";
-      }
-      if (buffer.trim()) rows.push(buffer.trim());
-    }
-    return rows;
-  }
-
-  async function verifiedParagraphs(file, doc) {
-    if (!crypto.subtle || !/^[\da-f]{64}$/i.test(doc.sourceSha256 || "")) {
-      throw Error("无法校验本地版本。请使用最新版目录，在本机服务或 HTTPS 页面中打开。");
-    }
-    const bytes = await file.arrayBuffer();
-    const hash = await crypto.subtle.digest("SHA-256", bytes);
-    const digest = Array.from(new Uint8Array(hash), (v) => v.toString(16).padStart(2, "0")).join("");
-    if (digest !== doc.sourceSha256.toLowerCase()) {
-      throw Error("文件与笔记所引用的归档版本不同，段号可能已经变化。请关联与本馆目录匹配的原文。");
-    }
-    return archiveParagraphs(new TextDecoder("utf-8").decode(bytes));
-  }
-
-  function showArchiveParagraphs(win, doc, rows, paragraph) {
-    if (!rows.length || (paragraph && !rows[paragraph - 1])) {
-      throw Error("这份归档中没有所引用的段号。请核对归档版本。");
-    }
-    const target = document.implementation.createHTMLDocument();
-    target.documentElement.lang = "zh-CN";
-    const policy = target.createElement("meta");
-    policy.httpEquiv = "Content-Security-Policy";
-    policy.content = "default-src 'none'; style-src https: http: file:; base-uri 'none'; form-action 'none'";
-    const charset = target.createElement("meta");
-    charset.charset = "utf-8";
-    target.title = doc.title + " · 本地原文";
-    const viewport = target.createElement("meta");
-    viewport.name = "viewport";
-    viewport.content = "width=device-width, initial-scale=1";
-    const sheet = target.createElement("link");
-    sheet.rel = "stylesheet";
-    sheet.href = new URL("assets/paragraphs.css", document.baseURI).href;
-    const main = target.createElement("main");
-    const head = target.createElement("header");
-    const kicker = target.createElement("small");
-    kicker.textContent = "本地归档原文 · 正文段落";
-    const heading = target.createElement("h1");
-    heading.textContent = doc.title;
-    head.append(kicker, heading);
-    main.append(head);
-    for (const [index, text] of rows.entries()) {
-      const block = target.createElement("p");
-      block.id = "B" + (index + 1);
-      const link = target.createElement("a");
-      link.setAttribute("href", "#" + block.id);
-      link.textContent = "第 " + (index + 1) + " 段";
-      const body = target.createElement("span");
-      body.textContent = text;
-      block.append(link, body);
-      main.append(block);
-    }
-    target.body.replaceChildren(main);
-    target.head.prepend(charset, policy, viewport, sheet);
-    const blob = new Blob(["<!doctype html>", target.documentElement.outerHTML], { type: "text/html;charset=utf-8" });
-    const objectUrl = URL.createObjectURL(blob);
-    if (oldObjectUrl) setTimeout(URL.revokeObjectURL, 60000, oldObjectUrl);
-    oldObjectUrl = objectUrl;
-    const destination = objectUrl + (paragraph ? "#B" + paragraph : "");
-    if (win) win.location.replace(destination);
-    else window.location.assign(destination);
-  }
-
-
-  let pending = null;
-  async function original(id, page, paragraph) {
-    let d = byId.get(Number(id));
-    if (!d) return;
-    let path = safeParts(d.local);
-    if (!path.length) {
-      toast("这篇文稿没有对应的本地路径。");
-      return;
-    }
-    if (window.READING_ROOM_LOCAL_ARCHIVE === true) {
-      if (d.file === "HTML") {
-        const digest = d.sourceSha256 || "";
-        if (!/^[\da-f]{64}$/i.test(digest)) {
-          localDialog("这份文稿缺少版本校验信息，请使用最新目录或查阅来源网页。", url(d.web));
-          return;
-        }
-        const filename = String(d.id).padStart(4, "0") + "-" + digest.slice(0, 16).toLowerCase() + ".html";
-        window.open("data/paragraphs/" + filename + (paragraph ? "#B" + Number(paragraph) : ""), "_blank", "noopener");
-        return;
-      }
-      window.open(
-        path.map(encodeURIComponent).join("/") +
-          (page && d.file === "PDF" ? "#page=" + Number(page) : ""),
-        "_blank",
-        "noopener",
-      );
-      return;
-    }
-    if (
-      !dirHandle &&
-      !files.size &&
-      page &&
-      url(d.sourceUrl) &&
-      (/\.pdf(?:$|[?#])/i.test(d.sourceUrl) ||
-        (d.sourceUrl !== d.web && d.file === "PDF"))
-    ) {
-      let direct = new URL(d.sourceUrl);
-      direct.hash = "page=" + Number(page);
-      window.open(direct.href, "_blank", "noopener");
-      return;
-    }
-    if (!dirHandle && !files.size) {
-      pending = [id, page, paragraph];
-      localDialog(paragraph
-        ? "关联保存这些原稿的资料文件夹后，将打开本馆引用的第 " + paragraph + " 段。来源网页的排版及段号可能不同。"
-        : "请选择包含投资家子目录的资料文件夹。", url(d.web));
-      return;
-    }
-    let win = window.open("about:blank", "_blank");
-    if (win) win.opener = null;
-    try {
-      let file = await findFile(path);
-      if (!file) throw Error();
-      if (d.file === "HTML") {
-        const rows = await verifiedParagraphs(file, d);
-        showArchiveParagraphs(win, d, rows, Number(paragraph));
-        return;
-      }
-      let objectUrl = URL.createObjectURL(file);
-      if (oldObjectUrl) setTimeout(URL.revokeObjectURL, 60000, oldObjectUrl);
-      oldObjectUrl = objectUrl;
-      let target =
-        objectUrl + (page && d.file === "PDF" ? "#page=" + Number(page) : "");
-      if (win) win.location.replace(target);
-      else {
-        let a = document.createElement("a");
-        a.href = target;
-        a.target = "_blank";
-        a.rel = "noopener";
-        a.click();
-      }
-    } catch (error) {
-      win?.close();
-      pending = [id, page, paragraph];
-      localDialog(
-        error instanceof Error && /校验|归档|段号/.test(error.message) ? error.message :
-          "当前文件夹中未找到这份原文。请选择包含各投资家子目录的上一级文件夹，或使用来源页面。",
-        url(d.web),
-      );
-    }
-  }
-  function idb(action, value) {
-    return new Promise((resolve, reject) => {
-      let r = indexedDB.open("investor-reading-room", 1);
-      r.onupgradeneeded = () => r.result.createObjectStore("preferences");
-      r.onerror = () => reject(r.error);
-      r.onsuccess = () => {
-        let db = r.result,
-          t = db.transaction(
-            "preferences",
-            action === "get" ? "readonly" : "readwrite",
-          );
-        let s = t.objectStore("preferences"),
-          request =
-            action === "get" ? s.get("originals") : s.put(value, "originals");
-        let answer;
-        request.onsuccess = () => (answer = request.result);
-        t.oncomplete = () => {
-          db.close();
-          resolve(answer);
-        };
-        t.onerror = () => {
-          db.close();
-          reject(t.error);
-        };
-      };
-    });
-  }
-  async function afterChoose() {
-    document.querySelector("#source-setting").textContent = "本地原文设置";
-    dialog.close();
-    toast("已关联本地资料文件夹");
-    if (pending) {
-      let [id, page, paragraph] = pending;
-      pending = null;
-      await original(id, page, paragraph);
-    }
-  }
-  async function pick() {
-    if (typeof window.showDirectoryPicker === "function") {
-      try {
-        dirHandle = await window.showDirectoryPicker({ mode: "read" });
-        files.clear();
-        try {
-          await idb("put", dirHandle);
-        } catch {}
-        await afterChoose();
-        return;
-      } catch (e) {
-        if (e.name === "AbortError") return;
-      }
-    }
-    fileInput.click();
-  }
-  fileInput.addEventListener("change", async () => {
-    if (!fileInput.files.length) return;
-    const next = new Map();
-    for (let f of fileInput.files) {
-      let path = f.webkitRelativePath.split("/").slice(1).join("/");
-      if (path) next.set(path, f);
-    }
-    files = next;
-    dirHandle = null;
-    fileInput.value = "";
-    await afterChoose();
-  });
   document.querySelector(".skip").addEventListener("click", (e) => {
     e.preventDefault();
     main.focus();
@@ -1416,18 +1068,6 @@
         ?.scrollIntoView({ behavior: "smooth" });
       return;
     }
-    if (el.dataset.paragraph) {
-      original(el.dataset.doc, undefined, Number(el.dataset.paragraph));
-      return;
-    }
-    if (el.dataset.page) {
-      original(el.dataset.doc, el.dataset.page);
-      return;
-    }
-    if (el.dataset.original) {
-      original(el.dataset.original);
-      return;
-    }
     if (el.dataset.save) {
       let id = Number(el.dataset.save);
       bookmarks.has(id) ? bookmarks.delete(id) : bookmarks.add(id);
@@ -1444,17 +1084,6 @@
         break;
       case "search":
         launchSearch();
-        break;
-      case "local":
-        pending = null;
-        localDialog();
-        break;
-      case "choose-local":
-        pick();
-        break;
-      case "close-dialog":
-        pending = null;
-        dialog.close();
         break;
     }
   });
@@ -1497,7 +1126,6 @@
       !e.ctrlKey &&
       !e.metaKey &&
       !e.altKey &&
-      !dialog.open &&
       !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)
     ) {
       e.preventDefault();
@@ -1511,26 +1139,32 @@
     try {
       let raw = window.READING_ROOM_DATA;
       if (!raw && location.protocol === "file:") {
-        try {
-          await new Promise((resolve, reject) => {
-            let s = document.createElement("script");
-            s.src = "data/offline.js";
-            s.onload = resolve;
-            s.onerror = reject;
-            document.head.append(s);
-          });
-          raw = window.READING_ROOM_DATA;
-        } catch {}
+        await new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "data/offline.js";
+          script.onload = resolve;
+          script.onerror = () => reject(Error("缺少 data/offline.js，或离线包尚未完整解压。"));
+          document.head.append(script);
+        });
+        raw = window.READING_ROOM_DATA;
+        if (!raw) {
+          const packed = window.READING_ROOM_GZIP;
+          if (typeof packed !== "string") throw Error("离线目录格式有误。");
+          if (typeof DecompressionStream === "undefined") {
+            throw Error("请使用新版浏览器，或运行 python serve.py 后打开本机阅读器。");
+          }
+          const bytes = Uint8Array.from(atob(packed), ch => ch.charCodeAt(0));
+          const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
+          raw = await new Response(stream).json();
+          delete window.READING_ROOM_GZIP;
+        }
       }
-      let values = raw
-        ? [raw.docs || raw.library, raw.guide]
-        : await Promise.all(
-            ["library", "guide"].map(async (n) => {
-              let r = await fetch("data/" + n + ".json");
-              if (!r.ok) throw Error("data/" + n + ".json · " + r.status);
-              return r.json();
-            }),
-          );
+      const values = raw ? [raw.docs || raw.library, raw.guide] :
+        await Promise.all(["library", "guide"].map(async name => {
+          const response = await fetch("data/" + name + ".json");
+          if (!response.ok) throw Error("data/" + name + ".json · " + response.status);
+          return response.json();
+        }));
       docs = dataArr(values[0], "docs");
       guide = dataArr(values[1], "guide");
       if (!docs.length) throw Error("文稿目录为空。");
@@ -1568,21 +1202,16 @@
               ...arr(n.sections).flatMap((x) => [x.h, x.text]),
               n.practice,
               n.edge,
-              ...arr(d.parts).map((p) => p.title),
+              ...arr(d.parts).flatMap(part => {
+                 const n = reading(part);
+                 return [part.title, n.lead, ...arr(n.sections).flatMap(s => [s.h, s.text]), n.practice, n.edge];
+               }),
             ].join(" "),
           ),
         );
       }
       groups = [...bins.values()].sort((a, b) => cmp(a.name, b.name));
       paint();
-      try {
-        let h = await idb("get");
-        if (h && (await h.queryPermission({ mode: "read" })) === "granted") {
-          dirHandle = h;
-          document.querySelector("#source-setting").textContent =
-            "本地原文设置";
-        }
-      } catch {}
     } catch (e) {
       main.innerHTML =
         '<div class="wrap ordinary">' +

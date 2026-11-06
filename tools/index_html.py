@@ -1,7 +1,7 @@
-"""Build private, numbered reading copies of the HTML in a user's local archive.
+"""Build numbered reading copies of the HTML in the bundled or flat originals archive.
 
 Requires beautifulsoup4. Run 'python tools/index_html.py --help' for options.
-The public catalog contains the checksums and document paths, never the source text.
+Every source must match the catalog checksum before its numbered copy is installed.
 """
 
 import argparse
@@ -91,12 +91,10 @@ def reading_copy(doc, rows, style):
 
 def run(args):
     root = args.archive.resolve()
-    dest = (args.output or root / 'data' / 'paragraphs').resolve()
-    # An offline installation may copy these tools into the archive itself.
-    # An output pointing into a separate public reader must always be rejected.
-    installed_offline = root == PROJECT and (root / 'data' / 'offline.js').is_file()
-    if dest.is_relative_to(PROJECT) and not installed_offline:
-        raise ValueError("Refusing to install private reading copies inside the public project")
+    data_root = PROJECT if root == (PROJECT / "originals").resolve() else root
+    dest = (args.output or data_root / "data" / "paragraphs").resolve()
+    if dest.is_relative_to(PROJECT) and dest != (PROJECT / "data" / "paragraphs").resolve():
+        raise ValueError("Inside the project, reading copies belong in data/paragraphs")
     docs = [d for d in json.loads(args.library.read_text(encoding='utf-8-sig')) if d['file'] == 'HTML']
     if not docs:
         raise ValueError("No HTML records in the catalog")
@@ -136,14 +134,14 @@ def run(args):
                 path.replace(dest / path.name)
     print(f'{len(docs)} HTML documents / {total} numbered paragraphs verified.')
     if not args.check_only:
-        print(f'Private reading copies written to {dest}')
+        print(f'Numbered reading copies written to {dest}')
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('archive', type=Path, help='Directory containing the original investor folders.')
     parser.add_argument('--library', type=Path, default=PROJECT / 'data' / 'library.json')
-    parser.add_argument('--output', type=Path, help='Private output directory; default: ARCHIVE/data/paragraphs')
+    parser.add_argument('--output', type=Path, help='Numbered HTML output directory; default: data/paragraphs beside the reader')
     parser.add_argument('--check-texts', type=Path, help='Compare every B paragraph with the numbered reference texts.')
     parser.add_argument('--check-only', action='store_true', help='Validate without installing reading copies.')
     try:
