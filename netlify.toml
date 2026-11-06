@@ -1,3 +1,6 @@
 [build]
   command = "python tools/build_netlify.py"
   publish = "dist"
+
+[build.processing.html]
+  pretty_urls = false
